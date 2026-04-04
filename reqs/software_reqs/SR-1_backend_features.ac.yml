@@ -1,0 +1,28 @@
+id: SR-3
+tags: [be]
+title: Backend features
+description: |
+  BE must serve a WebSocket without any authentication.
+  BE must support only HTTP (ATM). 
+  BE must, if configured, serve a static folder of files. (for ex: index.html)
+  BE must have plug-in system for receiving watch-changed-notice. The plug-in system will be as follows:
+  1. When starting the BE will receive configuration which binary to start with what arguments.
+  2. When the BE initialized itself will start the the binary and the communication will be over stdin 
+  and stderr from the binary using JSON format.
+  3. the watcher should send to BE "ready" message when the app is waiting for changes.
+  4. the watcher detects change on files (processes all include/exclude before triggering this event) and sends
+  to BE a message "change-detected" with all metadata: timestamp, change-number
+  5. the watcher starts regeneration commands and sends to BE: starting regeneration x out of y steps, so that FE can show loading icon and percentage execution.
+  6. the watcher at finishing each regeneration command sends to BE: regeneration step x out fo y finished
+  7, in case a new change is detected while regenerating previous change, follow the process to stop the current generation and start a new one. Also inform BE for the regeneration restart.
+  8. when finishing all regeneration steps, send a message to BE to reload the WebUI. 
+  9. BE transmits all messages to FE via websocket.
+
+  BE configuration file should be a yml or json file that specify following:
+  1. URL to host websocket
+  2. [optional] path to directory to statically serve
+  3. which binary and arguments to start for watching for changes.
+
+  API between BE and watcher:
+
+
