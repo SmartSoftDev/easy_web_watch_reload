@@ -14,7 +14,8 @@ description: |
     - [only for directories] recursive [boolean - default true]
     - [only for directories] recursive level limit [int - default 0(all levels)]
     - for each watching-list define what to do when a change is detected:
-      - a list of generate command and arguments to run when changes are detected
+      - a list of generate command and arguments to run when changes are detected. PS: of course the FE part 
+      from EWW should be also injected into web app. 
       - can the generation be interrupted [boolean - default true]
       - [optional] a command to execute if the generate process must be interrupted
   
