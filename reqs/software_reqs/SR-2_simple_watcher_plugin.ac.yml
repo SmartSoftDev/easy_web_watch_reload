@@ -6,6 +6,7 @@ description: |
   The watcher plugin should implement API on stdin and stderr with the BE. 
   The watcher should read a yml or json config file for complex configurations, 
   but should provide simple and useful CLI arguments for simple configuration. 
+  The watcher plugin should be able to start in standalone-CLI mode. where only the regenerate function is used.
   The watcher configuration:
   1. should regenerate on startup [boolean - default true]
   1. setup the a multiple watching-list of files and/or directories. 
