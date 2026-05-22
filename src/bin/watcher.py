@@ -37,9 +37,9 @@ if __name__ == "__main__":
     else:
         recursive = False
 
+    # Setup watchdog
     event_handler = FileWatcher()
     observer = Observer()
-
     observer.schedule(event_handler, path=FOLDER_TO_WATCH, recursive=recursive)
     observer.start()
 
@@ -52,5 +52,5 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         observer.stop()
         print("\n🛑 Watcher stopped.")
-
+    # Safely closing the thread
     observer.join()
