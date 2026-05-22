@@ -1,0 +1,15 @@
+# ========================
+# Virtual Environments
+# ========================
+venv/
+.venv/
+env/
+.env/
+ENV/
+# ========================
+# Python Caches & Bytecode
+# ========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
