@@ -9,13 +9,22 @@ from src.utils.args import get_arguments
 
 
 class FileWatcher(FileSystemEventHandler):
-    def on_created(self, event):
+    def _handle_event(self, event):
         item_name = os.path.basename(event.src_path)
 
         print(f"Event TYPE : {event.event_type} on '{item_name}'")
         print("Running Linux command: echo hello")
 
         subprocess.run(['echo', 'hello'], shell=False)
+
+    def on_created(self, event):
+        self._handle_event(event)
+
+    def on_deleted(self, event):
+        self._handle_event(event)
+
+    def on_moved(self, event):
+        self._handle_event(event)
 
 
 if __name__ == "__main__":
