@@ -23,7 +23,7 @@ class FileWatcherWebSocket:
             await asyncio.gather(*tasks, return_exceptions=True)
 
         else:
-            print("[Async] Aborted: The clients set is empty.")
+            print("Aborted: The clients set is empty.")
 
     def broadcast_from_sync(self, message):
         # is called from the synchronous file watcher, so we need to schedule the async broadcast on the main loop
