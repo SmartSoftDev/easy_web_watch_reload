@@ -5,6 +5,8 @@ import time
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
+from src.utils.args import get_arguments
+
 
 class FileWatcher(FileSystemEventHandler):
     def on_created(self, event):
@@ -17,12 +19,19 @@ class FileWatcher(FileSystemEventHandler):
 
 
 if __name__ == "__main__":
-    FOLDER_TO_WATCH = "."
+    FOLDER_TO_WATCH = "src/bin"
+
+    args = get_arguments()
+
+    if args.recursive:
+        recursive = True
+    else:
+        recursive = False
 
     event_handler = FileWatcher()
-    # Observer watches the file system
     observer = Observer()
-    observer.schedule(event_handler, path=FOLDER_TO_WATCH)
+
+    observer.schedule(event_handler, path=FOLDER_TO_WATCH, recursive=recursive)
     observer.start()
 
     print("Watcher started")
