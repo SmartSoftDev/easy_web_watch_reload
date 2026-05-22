@@ -7,6 +7,7 @@ from websockets.asyncio.server import serve
 
 
 async def main():
+    # loop reference to bridge the gap between the synchronous file watcher and the asynchronous WebSocket server
     loop = asyncio.get_running_loop()
 
     ws_server = FileWatcherWebSocket(loop)
@@ -27,10 +28,11 @@ async def main():
         print("Server listening... Modify a file in this directory!")
 
         try:
+            # keep the server running indefinitely, until interrupted
             await asyncio.Future()
         except KeyboardInterrupt, asyncio.CancelledError:
             observer.stop()
-
+    # safely stop the observer thread and wait for it to finish
     observer.join()
 
 if __name__ == "__main__":
