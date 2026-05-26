@@ -21,7 +21,7 @@ async def main():
         recursive = False
 
     observer = Observer()
-    observer.schedule(event_handler, path=".", recursive=recursive)
+    observer.schedule(event_handler, path="../feat-reqs-tcs-as-code/src/bin", recursive=recursive)
     observer.start()
 
     async with serve(ws_server.handler, "localhost", 8765):
