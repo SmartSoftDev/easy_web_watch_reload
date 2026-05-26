@@ -5,7 +5,8 @@ class FileWatcherWebSocket:
     def __init__(self, loop):
         self.connected_clients = set()
         self.loop = loop  # We must store the main async loop
-
+        
+        
     async def handler(self, websocket):
         self.connected_clients.add(websocket)
         try:

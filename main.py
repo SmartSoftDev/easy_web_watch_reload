@@ -1,4 +1,5 @@
 import asyncio
+
 from watchdog.observers import Observer
 from src.server.watcher_websocket import FileWatcherWebSocket
 from src.bin.watcher import FileWatcher
@@ -24,9 +25,9 @@ async def main():
     observer.schedule(event_handler, path="../feat-reqs-tcs-as-code/src/bin", recursive=recursive)
     observer.start()
 
-    async with serve(ws_server.handler, "localhost", 8765):
+    async with serve(ws_server.handler, "localhost", 8765) as server:
         print("Server listening... Modify a file in this directory!")
-
+        ws_server.server = server
         try:
             # keep the server running indefinitely, until interrupted
             await asyncio.Future()

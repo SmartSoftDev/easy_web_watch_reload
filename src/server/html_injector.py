@@ -1,7 +1,7 @@
 import os
 
 
-def inject_websocket_client(port=8765):
+def inject_websocket_client(port):
     """
     Injects a Vanilla JS WebSocket client into an HTML file before the </body> tag.
     """
@@ -35,7 +35,7 @@ def inject_websocket_client(port=8765):
 
     file_path = os.path.abspath(os.path.join(
         __file__, "../../../", "requirements.html"))
-    # Check if the file actually exists
+  
     if not os.path.exists(file_path):
         print(f"Error: Could not find {file_path}")
         return False
