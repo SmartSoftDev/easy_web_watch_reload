@@ -26,9 +26,10 @@ class FileWatcher(FileSystemEventHandler):
         json_message = json.dumps(event_data)
         three_dirs_back = "../../../.."
         shell_command_path = os.path.abspath(os.path.join(__file__,three_dirs_back, "feat-reqs-tcs-as-code","src", "bin", "gen_reqs.py"))
+        project_config_path = os.path.abspath(os.path.join(__file__,three_dirs_back, "feat-reqs-tcs-as-code","examples", "Project1", "config.frtac.yml"))
         self.ws_server.broadcast_from_sync(json_message)
         print(f'subprocess shouldrun on  path{shell_command_path}')
-        subprocess.run(['python3', shell_command_path,'--html'], shell=False)
+        subprocess.run(['python3', shell_command_path,'--project-config', project_config_path,'--html'], shell=False)
 
     def on_created(self, event):
         self._broadcast_event("on_created", self._get_item_name(event))
