@@ -15,17 +15,19 @@ async def main():
     event_handler = FileWatcher(ws_server)
 
     args = get_arguments()
-
+    port = args.port
+    watcher_path = args.watch_path
+    print(f"Watching path: {watcher_path} (recursive: {args.recursive})")
     if args.recursive:
         recursive = True
     else:
-        recursive = False
+        recursive = False    
 
     observer = Observer()
-    observer.schedule(event_handler, path="../feat-reqs-tcs-as-code/src/bin", recursive=recursive)
+    observer.schedule(event_handler, path=f"../{watcher_path}", recursive=recursive)
     observer.start()
 
-    async with serve(ws_server.handler, "localhost", 8765) as server:
+    async with serve(ws_server.handler, "localhost", port) as server:
         print("Server listening... Modify a file in this directory!")
         ws_server.server = server
         try:
