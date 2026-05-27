@@ -43,3 +43,6 @@ class FileWatcher(FileSystemEventHandler):
 
     def on_moved(self, event):
         self._broadcast_event("on_moved", self._get_item_name(event))
+
+    def on_modified(self, event):
+        self._broadcast_event("on_modified", self._get_item_name(event))
