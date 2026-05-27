@@ -22,7 +22,8 @@ async def main():
         recursive = True
     else:
         recursive = False    
-
+        
+    # Set up the file system observer to watch for changes in the specified directory
     observer = Observer()
     observer.schedule(event_handler, path=f"../{watcher_path}", recursive=recursive)
     observer.start()

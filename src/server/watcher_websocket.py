@@ -1,12 +1,15 @@
 import asyncio
 
+from Core.devices.rpi.picow.ghempy import schedule
+
 
 class FileWatcherWebSocket:
     def __init__(self, loop):
         self.connected_clients = set()
-        self.loop = loop  # We must store the main async loop
-        
-        
+        # storing specific event loop reference allows
+        # to schedule asynchronous tasks from synchronous code
+        self.loop = loop
+
     async def handler(self, websocket):
         self.connected_clients.add(websocket)
         try:
@@ -17,7 +20,7 @@ class FileWatcherWebSocket:
 
     async def _async_broadcast(self, message):
         if self.connected_clients:
-
+            # asynchronously schedules coroutines in event loop
             tasks = [asyncio.create_task(client.send(message))
                      for client in self.connected_clients]
             # concurrently runs tasks
@@ -27,7 +30,7 @@ class FileWatcherWebSocket:
             print("Aborted: The clients set is empty.")
 
     def broadcast_from_sync(self, message):
-        # is called from the synchronous file watcher, so we need to schedule the async broadcast on the main loop
+        # schedule the async broadcast on the asyncio event loop
         asyncio.run_coroutine_threadsafe(
             self._async_broadcast(message),
             self.loop

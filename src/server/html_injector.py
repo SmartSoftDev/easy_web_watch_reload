@@ -9,10 +9,8 @@ def inject_websocket_client(port):
     # The JavaScript to inject (formatted to accept any port number)
     javascript_to_inject = f"""
     <script>
-        // 1. Connect to Python
         const websocket = new WebSocket("ws://localhost:{port}");
 
-        // 2. What to do when Python sends a message
         websocket.onmessage = function(event) {{
             console.log("Receieved message from SERVER");
              location.reload();

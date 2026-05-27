@@ -26,7 +26,7 @@ class FileWatcher(FileSystemEventHandler):
         shell_command_path = os.path.abspath(os.path.join( "..","feat-reqs-tcs-as-code", "src", "bin", "gen_reqs.py"))
         project_config_path = os.path.abspath(os.path.join( "..","feat-reqs-tcs-as-code",
                                                             "examples", "Project1", "config.frtac.yml"))
-        
+        # bridging synchronous file watcher with asynchronous WebSocket server 
         self.ws_server.broadcast_from_sync(json_message)
 
         subprocess.run(['python3', shell_command_path, '--project-config',
