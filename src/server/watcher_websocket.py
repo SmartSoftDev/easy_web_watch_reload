@@ -1,7 +1,5 @@
 import asyncio
 
-from Core.devices.rpi.picow.ghempy import schedule
-
 
 class FileWatcherWebSocket:
     def __init__(self, loop):
