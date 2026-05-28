@@ -1,48 +1,53 @@
-import subprocess
+import asyncio
 import os
-import json
+import sys
 
-from watchdog.events import FileSystemEventHandler
+from websockets.asyncio.server import serve
+from watchdog.observers import Observer
+from src.bin.lib.server.watcher_websocket import FileWatcherWebSocket
+from src.bin.lib.watching import FileWatcher
+from src.bin.lib.args import get_arguments
+# from websockets.asyncio.server import serve
 
-from src.server.html_injector import inject_websocket_client
 
+async def main():
 
-class FileWatcher(FileSystemEventHandler):
-    def __init__(self, ws_server):
-        super().__init__()
+    args = get_arguments()
+    port = args.port
+    watcher_path = os.path.abspath(args.watch_path)
+    html_generator_path = os.path.abspath(args.html_generator_path)
+    config_path = os.path.abspath(args.config_path)
 
-        self.ws_server = ws_server
+    if not os.path.exists(watcher_path):
+        print(f"❌ Error: The directory '{watcher_path}' does not exist!")
+        sys.exit(1)
+    print(f"Watching path: {watcher_path} (recursive: {args.recursive})")
+    if args.recursive:
+        recursive = True
+    else:
+        recursive = False
 
-    def _get_item_name(self, event):
-        return os.path.basename(event.src_path)
+    # loop reference to bridge the gap between the synchronous file watcher and the asynchronous WebSocket server
+    loop = asyncio.get_running_loop()
+    ws_server = FileWatcherWebSocket(loop)
+    event_handler = FileWatcher(ws_server, html_generator_path, config_path)
 
-    def _broadcast_event(self, event_type, item_name):
-        event_data = {
-            "type": event_type,
-            "item": item_name,
-        }
-        json_message = json.dumps(event_data)
+    # Set up the file system observer to watch for changes in the specified directory
+    observer = Observer()
+    observer.schedule(
+        event_handler, path=f"{watcher_path}", recursive=recursive)
+    observer.start()
 
-        shell_command_path = os.path.abspath(os.path.join( "..","feat-reqs-tcs-as-code", "src", "bin", "gen_reqs.py"))
-        project_config_path = os.path.abspath(os.path.join( "..","feat-reqs-tcs-as-code",
-                                                            "examples", "Project1", "config.frtac.yml"))
-        # bridging synchronous file watcher with asynchronous WebSocket server 
-        self.ws_server.broadcast_from_sync(json_message)
+    async with serve(ws_server.handler, "localhost", port) as server:
+        print("Server listening... Modify a file in this directory!")
+        ws_server.server = server
+        try:
+            # keep the server running indefinitely, until interrupted
+            await asyncio.Future()
+        except KeyboardInterrupt, asyncio.CancelledError:
+            observer.stop()
+    # safely stop the observer thread and wait for it to finish
+    observer.join()
 
-        subprocess.run(['python3', shell_command_path, '--project-config',
-                       project_config_path, '--html'], shell=False)
-        
-        server_port = self.ws_server.server.sockets[0].getsockname()[1]
-        inject_websocket_client(server_port)
-
-    def on_created(self, event):
-        self._broadcast_event("on_created", self._get_item_name(event))
-
-    def on_deleted(self, event):
-        self._broadcast_event("on_deleted", self._get_item_name(event))
-
-    def on_moved(self, event):
-        self._broadcast_event("on_moved", self._get_item_name(event))
-
-    def on_modified(self, event):
-        self._broadcast_event("on_modified", self._get_item_name(event))
+if __name__ == "__main__":
+    asyncio.run(main())

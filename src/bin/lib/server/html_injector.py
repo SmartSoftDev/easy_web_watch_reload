@@ -32,7 +32,7 @@ def inject_websocket_client(port):
     """
 
     file_path = os.path.abspath(os.path.join(
-        __file__, "../../../", "requirements.html"))
+        __file__, "requirements.html"))
   
     if not os.path.exists(file_path):
         print(f"Error: Could not find {file_path}")

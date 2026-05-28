@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Requirements</title>
+  <style>
+    body { font-family: sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; line-height: 1.6; }
+    h1 { border-bottom: 2px solid #333; padding-bottom: .4rem; }
+    h2 { border-bottom: 1px solid #999; padding-bottom: .2rem; margin-top: 2rem; }
+    h3 { color: #2c5282; margin-top: 1.5rem; }
+    code { background: #f4f4f4; padding: 2px 4px; border-radius: 3px; }
+    pre  { background: #f4f4f4; padding: 1rem; border-radius: 4px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+<pre><code class="language-yml">generated-at: '2026-05-28T07:52:35'
+git:
+  commit: 1d59409abed050eb2dd703e165e98f3ece420610
+  commit-date: '2026-04-29T13:16:52+03:00'
+  describe: 1d59409
+warnings: []
+</code></pre>
+
+    <script>
+        const websocket = new WebSocket("ws://localhost:8765");
+
+        websocket.onmessage = function(event) {
+            console.log("Receieved message from SERVER");
+             location.reload();
+        };
+
+        websocket.onopen = function() {
+            console.log("Successfully connected to WEBSOCKET!");
+        };
+
+        websocket.error = function(error) {
+            console.error("WebSocket error:", error);
+        };
+
+        websocket.onclose = function() {
+            console.log("WebSocket connection closed.");
+        };
+
+    </script>
+    
+</body>
+</html>
